@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -134,11 +135,13 @@ public class WifiDirectReceive extends AppCompatActivity {
             public void onConnectionInfoAvailable(final WifiP2pInfo minfo) {
 
                 Log.i("bizzmark", "InfoAvailable is on");
+                Toast.makeText(getApplicationContext(),"ConnectionInfoListener onConnectionInfoAvailable.",Toast.LENGTH_SHORT);
 
                 info = minfo;
 
                 if (info.groupFormed && info.isGroupOwner) {
 
+                    Toast.makeText(getApplicationContext(),"WifiP2pManager.ConnectionInfoListener onConnectionInfoAvailable: Group owner.",Toast.LENGTH_SHORT);
                     Log.i("bizzmark", "Receive server start.");
 
                     mDataTask = new DataServerAsyncTask(WifiDirectReceive.this, txtView);
@@ -169,13 +172,12 @@ public class WifiDirectReceive extends AppCompatActivity {
 
             @Override
             public void onSuccess() {
-
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.connect success.",Toast.LENGTH_SHORT);
             }
 
             @Override
             public void onFailure(int reason) {
-
-
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.connect failure reason: " + reason,Toast.LENGTH_SHORT);
             }
         });
     }
@@ -203,12 +205,12 @@ public class WifiDirectReceive extends AppCompatActivity {
 
             @Override
             public void onSuccess() {
-
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.discoverPeers success.",Toast.LENGTH_SHORT);
             }
 
             @Override
             public void onFailure(int reason) {
-
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.discoverPeers failure. Reason: " + reason,Toast.LENGTH_SHORT);
             }
         });
     }
