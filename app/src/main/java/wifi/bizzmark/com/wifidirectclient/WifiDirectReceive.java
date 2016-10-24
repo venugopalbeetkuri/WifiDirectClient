@@ -46,7 +46,8 @@ public class WifiDirectReceive extends AppCompatActivity {
     private DataServerAsyncTask mDataTask;
 
     // For peers information.
-    private List<HashMap<String, String>> peersshow = new ArrayList<HashMap<String, String>>();
+    private List<HashMap<String, String>> peersshow = new ArrayList();
+
 
     // All the peers.
     private List peers = new ArrayList();
@@ -132,16 +133,16 @@ public class WifiDirectReceive extends AppCompatActivity {
         WifiP2pManager.ConnectionInfoListener mInfoListener = new WifiP2pManager.ConnectionInfoListener() {
 
             @Override
-            public void onConnectionInfoAvailable(final WifiP2pInfo minfo) {
+            public void onConnectionInfoAvailable(WifiP2pInfo minfo) {
 
                 Log.i("bizzmark", "InfoAvailable is on");
-                Toast.makeText(getApplicationContext(),"ConnectionInfoListener onConnectionInfoAvailable.",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),"ConnectionInfoListener onConnectionInfoAvailable.",Toast.LENGTH_SHORT).show();
 
                 info = minfo;
 
                 if (info.groupFormed && info.isGroupOwner) {
 
-                    Toast.makeText(getApplicationContext(),"WifiP2pManager.ConnectionInfoListener onConnectionInfoAvailable: Group owner.",Toast.LENGTH_SHORT);
+                    Toast.makeText(getApplicationContext(),"WifiP2pManager.ConnectionInfoListener onConnectionInfoAvailable: Group owner.",Toast.LENGTH_SHORT).show();
                     Log.i("bizzmark", "Receive server start.");
 
                     mDataTask = new DataServerAsyncTask(WifiDirectReceive.this, txtView);
@@ -156,14 +157,14 @@ public class WifiDirectReceive extends AppCompatActivity {
 
     private void createConnect(String address, final String name) {
 
-        WifiP2pDevice device;
+        //WifiP2pDevice device;
         WifiP2pConfig config = new WifiP2pConfig();
         Log.i("bizzmark", address);
 
         config.deviceAddress = address;
 
         config.wps.setup = WpsInfo.PBC;
-        Log.i("address", "MAC IS " + address);
+        Log.i("bizzmark", "MAC IS " + address);
 
         // Seller app so group owner.
         config.groupOwnerIntent = 15;
@@ -172,17 +173,19 @@ public class WifiDirectReceive extends AppCompatActivity {
 
             @Override
             public void onSuccess() {
-                Toast.makeText(getApplicationContext(),"WifiP2pManager.connect success.",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.connect success.",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int reason) {
-                Toast.makeText(getApplicationContext(),"WifiP2pManager.connect failure reason: " + reason,Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.connect failure reason: " + reason,Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void initEvents() {
+
+        discoverPeers();
 
         mAdapter.SetOnItemClickListener(new WifiAdapter.OnItemClickListener() {
 
@@ -205,13 +208,53 @@ public class WifiDirectReceive extends AppCompatActivity {
 
             @Override
             public void onSuccess() {
-                Toast.makeText(getApplicationContext(),"WifiP2pManager.discoverPeers success.",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.discoverPeers success.",Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int reason) {
-                Toast.makeText(getApplicationContext(),"WifiP2pManager.discoverPeers failure. Reason: " + reason,Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(),"WifiP2pManager.discoverPeers failure. Reason: " + reason,Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void StopConnect() {
+        // SetButtonGone();
+        mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure(int reason) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mReceiver, mFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("xyz", "hehehehehe");
+        unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        StopConnect();
+    }
+
+    public void ResetReceiver() {
+
+        unregisterReceiver(mReceiver);
+        registerReceiver(mReceiver, mFilter);
+
     }
 }
