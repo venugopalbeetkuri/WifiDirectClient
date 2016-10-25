@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class WifiDirectReceive extends AppCompatActivity {
 
 
     TextView txtView;
+    Button btnRefresh;
 
     RecyclerView mRecyclerView;
     WifiAdapter mAdapter;
@@ -69,6 +71,7 @@ public class WifiDirectReceive extends AppCompatActivity {
     private void initView() {
 
         txtView = (TextView) findViewById(R.id.txtReceived);
+        btnRefresh = (Button) findViewById(R.id.btnRefresh);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mAdapter = new WifiAdapter(peersshow);
@@ -185,7 +188,18 @@ public class WifiDirectReceive extends AppCompatActivity {
 
     private void initEvents() {
 
-        discoverPeers();
+
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getApplicationContext(),"Refresh button clicked.",Toast.LENGTH_SHORT).show();
+                ResetReceiver();
+                // sendMessage();
+                // btRefresh.setVisibility(View.INVISIBLE);
+            }
+        });
 
         mAdapter.SetOnItemClickListener(new WifiAdapter.OnItemClickListener() {
 
@@ -219,6 +233,7 @@ public class WifiDirectReceive extends AppCompatActivity {
     }
 
     private void StopConnect() {
+
         // SetButtonGone();
         mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
             @Override

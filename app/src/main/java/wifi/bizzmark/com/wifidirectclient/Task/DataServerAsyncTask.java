@@ -16,6 +16,10 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import android.os.Handler;
+import android.os.Looper;
+
+
 import wifi.bizzmark.com.wifidirectclient.WifiDirectReceive;
 
 /**
@@ -32,6 +36,7 @@ public class DataServerAsyncTask extends
      * @param statusText
      */
     public DataServerAsyncTask(WifiDirectReceive activity, View statusText) {
+
         this.statusText = (TextView) statusText;
         this.activity=activity;
     }
@@ -39,6 +44,7 @@ public class DataServerAsyncTask extends
     @Override
     protected String doInBackground(Void... params) {
         try {
+
             Log.i("bizzmark", "data doing back");
             ServerSocket serverSocket = new ServerSocket(8888);
 
@@ -70,12 +76,12 @@ public class DataServerAsyncTask extends
     @Override
     protected void onPostExecute(String result) {
 
-        Log.i("bizzmark", "data on post execute.");
+        Log.i("bizzmark", "data on post execute.Result: " + result);
 
-        Toast.makeText(activity, "result" + result, Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, "From customer: " + result, Toast.LENGTH_SHORT).show();
 
         if (result != null) {
-            statusText.setText("Data-String is: " + result);
+            statusText.setText("From customer: " + result);
         }
     }
 
