@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -32,6 +33,8 @@ public class DataServerAsyncTask extends
     private TextView statusText;
     private WifiDirectReceive activity;
 
+    // static ServerSocket serverSocket = null;
+
     /**
      * @param statusText
      */
@@ -45,8 +48,11 @@ public class DataServerAsyncTask extends
     protected String doInBackground(Void... params) {
         try {
 
-            Log.i("bizzmark", "data doing back");
-            ServerSocket serverSocket = new ServerSocket(8888);
+           // if(null == serverSocket) {
+                Log.i("bizzmark", "data doing back");
+                ServerSocket serverSocket = new ServerSocket(8888);
+           // }
+
 
             Log.i("bizzmark","Opening socket on 8888.");
             Socket client = serverSocket.accept();
@@ -59,6 +65,16 @@ public class DataServerAsyncTask extends
             }
 
             String str = baos.toString();
+
+           /* try{
+
+                OutputStream outputstream = client.getOutputStream();
+                outputstream.write("success\r\n".getBytes());
+            }catch(Throwable th){
+                th.printStackTrace();
+            }*/
+
+
             serverSocket.close();
             return str;
 
